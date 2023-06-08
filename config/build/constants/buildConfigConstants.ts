@@ -1,0 +1,4 @@
+const DEFAULT_BUILD_MODE = 'development'
+const DEFAULT_BUILD_PORT = 3000
+
+export { DEFAULT_BUILD_MODE, DEFAULT_BUILD_PORT }
