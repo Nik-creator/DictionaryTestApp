@@ -10,17 +10,19 @@ export default ({ mode: envMode, port: envPort }: BuildEnv) => {
     entry: path.resolve(__dirname, 'src', 'index.tsx'),
     build: path.resolve(__dirname, 'build'),
     html: path.resolve(__dirname, 'public', 'index.html'),
-    src: path.resolve(__dirname, 'src')
+    src: path.resolve(__dirname, 'src'),
+    env: path.resolve(__dirname, 'config/env/.env')
   }
 
   const mode: BuildMode = envMode || DEFAULT_BUILD_MODE
 
-  console.log('mode', mode)
+  const isDev = mode === DEFAULT_BUILD_MODE
   const port = envPort || DEFAULT_BUILD_PORT
 
   return getBuildWebpackConfig({
     mode,
     paths,
-    port
+    port,
+    isDev
   })
 }

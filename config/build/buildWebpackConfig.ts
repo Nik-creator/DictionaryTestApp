@@ -10,20 +10,21 @@ const getBuildWebpackConfig = ({
   mode,
   paths,
   port,
+  isDev
 }: BuildOptions): webpack.Configuration => {
-  const { entry, build, html } = paths;
+  const { entry, build } = paths;
 
   return {
     mode,
     entry,
     module: {
-      rules: getBuildLoaders(),
+      rules: getBuildLoaders(isDev),
     },
     resolve: getBuildResolvers(paths),
     output: getBuildOutputs(build),
-    plugins: getPlugins(html),
-    devtool: 'inline-source-map',
-    devServer: getBuildDevServer(port),
+    plugins: getPlugins(paths),
+    devtool: isDev ? 'inline-source-map' : undefined,
+    devServer: isDev ? getBuildDevServer(port) : undefined
   };
 };
 

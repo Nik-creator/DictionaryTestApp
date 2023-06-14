@@ -5,7 +5,8 @@ const getBuildOutputs = (path: BuildPaths['build']): webpack.Configuration['outp
   return {
     filename: "[name].[contenthash].js",
     path,
-    clean: true
+    clean: true,
+    publicPath: '/',
   }
 }
 

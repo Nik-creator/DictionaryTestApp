@@ -1,0 +1,12 @@
+# folders
+dist/
+build/
+
+node_modules/
+
+# files
+babel.config.js
+postcss.config.js
+tailwindcss-config.js
+
+*.js
