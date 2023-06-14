@@ -1,7 +1,28 @@
 import webpack from 'webpack'
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { BuildOptions } from './types/config'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 
-const getBuildLoaders = (): webpack.RuleSetRule[] => {
+const getBuildLoaders = (isDev: BuildOptions['isDev']): webpack.RuleSetRule[] => {
+  const svgLoader = {
+    test: /\.svg$/,
+    use: [{
+      loader: '@svgr/webpack',
+      options: {
+        icon: true,
+        svgoConfig: {
+          plugins: [
+            {
+              name: 'convertColors',
+              params: {
+                currentColor: true,
+              }
+            }
+          ]
+        }
+      }
+    }],
+  };
+
   const tsLoader: webpack.RuleSetRule = {
     test: /\.tsx?/,
     use: 'ts-loader',
@@ -9,23 +30,29 @@ const getBuildLoaders = (): webpack.RuleSetRule[] => {
   }
 
   const scssLoader: webpack.RuleSetRule = {
-    test: /\s[ac].ss$/i,
+    test: /\.s[ac]ss$/i,
     use: [
-      'style-loader',
+      isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
       {
         loader: 'css-loader',
         options: {
-          module: {
+          modules: {
             auto: (resPath: string) => Boolean(resPath.includes('.module')),
             localIdentName: '[path][name]__[local]--[hash:base64:5]'
           }
         }
       },
-      'postcss-loader'
+      'postcss-loader',
+      {
+        loader: 'sass-loader',
+        options: {
+          sourceMap: isDev
+        }
+      }
     ]
   }
 
-  return [tsLoader, scssLoader]
+  return [svgLoader, tsLoader, scssLoader]
 }
 
 export { getBuildLoaders }

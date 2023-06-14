@@ -1,7 +1,14 @@
 import React from 'react';
+import { useRenderContent } from './hooks/useRenderContent';
 
-const SearchScreen = () => {
-  return <div>Search</div>;
+const MainPage = () => {
+  const renderContent = useRenderContent()
+
+  return (
+    <div>
+      {renderContent}
+    </div>
+  );
 };
 
-export default SearchScreen;
+export default MainPage;

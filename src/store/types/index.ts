@@ -7,17 +7,15 @@ import type {
   ThunkDispatch,
 } from '@reduxjs/toolkit';
 import type { ThunkMiddlewareFor } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
-
-// import type { exampleServices } from '@app/services/example';
-
 import type { WordsState } from '@/store/words/types';
+import { wordsServices } from '@/services/words';
 
 type PayloadAction<T> = ReduxPayloadAction<T>;
 
 type SliceReducer<T> = SliceCaseReducers<T>;
 
 type Dependencies = {
-  exampleServices: typeof exampleServices;
+  wordsServices: typeof wordsServices;
 };
 
 type RootState = {
@@ -30,13 +28,6 @@ type ThunkAsyncConfig = {
   extra: Dependencies;
   state: RootState;
   dispatch: AppDispatch;
-};
-
-type RequestSendFeedback = {
-  phone: string;
-  email: string;
-  notifyByEmail: boolean;
-  msg: string;
 };
 
 type ThunkMiddlewareOptions = {
@@ -59,9 +50,9 @@ export type {
   SliceReducer,
   PayloadAction,
   RootState,
+  AppDispatch,
   Dependencies,
   Middlewares,
-  RequestSendFeedback,
   Reducers,
   ThunkMiddlewareOptions,
 };

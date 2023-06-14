@@ -1,0 +1,14 @@
+.container {
+  @apply bg-input;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 13px 8px;
+  border-radius: 7px;
+}
+
+
+.input {
+  padding-left: 8px;
+  @apply bg-input;
+}

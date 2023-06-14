@@ -3,10 +3,17 @@ import path from "path";
 import webpack from "webpack";
 import { BuildPaths } from "./types/config";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import Dotenv from "dotenv-webpack";
 
-const getPlugins = (path: BuildPaths['html']): webpack.WebpackPluginInstance[] => [
+require('dotenv').config();
+
+const getPlugins = (path: BuildPaths): webpack.WebpackPluginInstance[] => [
+  new Dotenv({
+    path: path.env,
+    systemvars: true,
+  }),
   new HtmlWebpackPlugin({
-    template: path
+    template: path.html
   }),
   new webpack.ProgressPlugin(),
   new MiniCssExtractPlugin({
