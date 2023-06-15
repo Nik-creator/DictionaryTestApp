@@ -1,14 +1,21 @@
-import { SearchRequest } from "@/services/types";
+import { MeaningsRequest, SearchRequest } from "@/services/types";
 import { DataLoadingStates } from "@/types";
 import { EntityState } from "@reduxjs/toolkit";
 import { PayloadAction } from "../types";
 
-type MeaningState = { [id: string]: Omit<Meanings, 'id'> }
+type MeaningState = {
+  [id: string]: Omit<Meanings, 'id'> & {
+    isFavorite: boolean;
+  }
+}
 
 type WordsState = {
   group: EntityState<GroupResponse>,
   meaningsDict: MeaningState
-  status: DataLoadingStates
+  groupLoadingStatus: DataLoadingStates
+  meaningsFavoritesLoadingStatus: DataLoadingStates
+  favorites: string[]
+  meanings: EntityState<Meanings>
 };
 
 type ChangePositionProps = {
@@ -19,6 +26,12 @@ type ChangePositionProps = {
 type PayloadChangeMeaningsPosition = PayloadAction<{
   groupId: number
 } & ChangePositionProps>
+
+type PayloadChangeFavoritesPosition = PayloadAction<ChangePositionProps>
+
+type PayloadFavorite = PayloadAction<string>
+
+type PayloadSyncFavorite = PayloadAction<string[]>
 
 type PartOfSpeechCode =
   | 'n' //noun
@@ -62,6 +75,18 @@ type Example = {
   soundUr: string
 }
 
+type MeaningWithSimilarTranslation = {
+  meaningId: number
+  frequencyPercent: string
+  partOfSpeechAbbreviation: string
+  translation: Translation
+}
+
+type AlternativeTranslation = {
+  text: string
+  translation: Translation
+}
+
 type Meanings = {
   id: string
   wordId: number
@@ -76,6 +101,8 @@ type Meanings = {
   images: Images[]
   definition: Definition
   examples: Example[]
+  meaningsWithSimilarTranslation: MeaningWithSimilarTranslation[]
+  alternativeTranslations: AlternativeTranslation[]
 }
 
 type Word = {
@@ -99,13 +126,24 @@ type WordsActionResponse = {
 
 type WordsActionRequest = SearchRequest
 
+type MeaningsActionRequest = MeaningsRequest
+
+type MeaningsActionResponse = (Meanings & {
+  isFavorite: boolean
+})[]
+
 export type {
   WordsState,
   WordsActionResponse,
   WordsActionRequest,
+  MeaningsActionResponse,
+  MeaningsActionRequest,
   Meanings,
   ChangePositionProps,
   PayloadChangeMeaningsPosition,
+  PayloadChangeFavoritesPosition,
+  PayloadFavorite,
+  PayloadSyncFavorite,
   GroupResponse,
   Word
 };

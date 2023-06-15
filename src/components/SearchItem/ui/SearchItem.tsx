@@ -2,6 +2,8 @@ import { useGetMeaningById } from '@/store/words/selectors'
 import { Card } from '@/ui/Card/ui/Card'
 import React, { useMemo } from 'react'
 import { useDnD } from '../hooks/useDnD'
+import { StarIcon } from './StarIcon'
+import styles from './Search.module.scss'
 
 type OwnProps = {
   id: string
@@ -25,9 +27,13 @@ const SearchItem = ({ id, index, groupId }: OwnProps) => {
   const opacity = useMemo(() => isDragging ? 0 : 1  , [isDragging])
 
   return (
-    <Card style={{ opacity }} ref={ref} data-handler-id={handlerId}>
+    <Card classNames={styles.container} style={{ opacity }} ref={ref} data-handler-id={handlerId}>
       {translation?.text}
-      {' '} {groupId}
+      <div style={{
+        cursor: 'pointer'
+      }}>
+        <StarIcon id={id} />
+      </div>
     </Card>
   )
 }

@@ -1,29 +1,78 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { RootState, SlicesName } from "../types";
-import { fetchWordsAction } from "./actions";
-import type { GroupResponse, PayloadChangeMeaningsPosition, WordsState } from "./types";
+import { fetchMeaningsAction, fetchWordsAction } from "./actions";
+import type { GroupResponse, Meanings, PayloadChangeFavoritesPosition, PayloadChangeMeaningsPosition, PayloadFavorite, PayloadSyncFavorite, WordsState } from "./types";
 import { DataLoadingStates } from "@/types";
 import { changePosition } from "../utils/changePosition";
 
 const groupAdapter = createEntityAdapter<GroupResponse>()
+const meaningsAdapter = createEntityAdapter<Meanings>()
 
 const groupSelector = groupAdapter.getSelectors<RootState>(
   (state) => state.words.group,
 );
 
+const meaningSelector = meaningsAdapter.getSelectors<RootState>(
+  (state) => state.words.meanings
+)
+
 const initialState: WordsState = {
   group: groupAdapter.getInitialState(),
-  status: DataLoadingStates.IDLE,
-  meaningsDict: {}
+  meanings: meaningsAdapter.getInitialState(),
+  groupLoadingStatus: DataLoadingStates.IDLE,
+  meaningsFavoritesLoadingStatus: DataLoadingStates.IDLE,
+  meaningsDict: {},
+  favorites: []
 }
 
 const slice = createSlice({
   name: SlicesName.WORDS,
   initialState,
   reducers: {
+    syncFavorites(state, { payload: ids }: PayloadSyncFavorite) {
+      state.favorites = ids
+    },
+    addFavorite(state, { payload: id }: PayloadFavorite) {
+      state.favorites.push(id);
+
+      state.meaningsDict = {
+        ...state.meaningsDict,
+        [id]: {
+          ...state.meaningsDict[id],
+          isFavorite: true
+        }
+      }
+    },
+    deleteFavorite(state, { payload: id }: PayloadFavorite) {
+      const newFavoritesIds = state.favorites.filter(
+        (favoriteId) => favoriteId !== id,
+      );
+      state.favorites = newFavoritesIds;
+
+      state.meaningsDict = {
+        ...state.meaningsDict,
+        [id]: {
+          ...state.meaningsDict[id],
+          isFavorite: false
+        }
+      }
+    },
     resetWords(state) {
-      state.group = groupAdapter.getInitialState(),
+      groupAdapter.removeAll(state.group),
         state.meaningsDict = initialState.meaningsDict
+    },
+    changeFavoritesPosition(state, { payload }: PayloadChangeFavoritesPosition) {
+
+      const { dragIndex, hoverIndex } = payload
+
+      const draftPosition = changePosition({
+        dragIndex,
+        hoverIndex,
+        state: state.favorites
+      })
+
+      state.favorites = draftPosition
+      state.meanings.ids = draftPosition
     },
     changeMeaningsPosition(state, { payload }: PayloadChangeMeaningsPosition) {
       const {
@@ -63,23 +112,37 @@ const slice = createSlice({
       const { group, meaningsDict } = payload
       groupAdapter.addMany(state.group, group)
       state.meaningsDict = meaningsDict
-      state.status = DataLoadingStates.IDLE
+      state.groupLoadingStatus = DataLoadingStates.IDLE
     }),
-      builder.addCase(fetchWordsAction.rejected, (state, { error }) => {
-        state.status = DataLoadingStates.ERROR
+      builder.addCase(fetchWordsAction.rejected, (state) => {
+        state.groupLoadingStatus = DataLoadingStates.ERROR
       })
     builder.addCase(fetchWordsAction.pending, (state) => {
-      state.status = DataLoadingStates.LOADING
-    })
+      state.groupLoadingStatus = DataLoadingStates.LOADING
+    }),
+      builder.addCase(fetchMeaningsAction.pending, (state) => {
+        state.meaningsFavoritesLoadingStatus = DataLoadingStates.LOADING
+      }),
+      builder.addCase(fetchMeaningsAction.fulfilled, (state, { payload }) => {
+        meaningsAdapter.setAll(state.meanings, payload)
+        state.meaningsFavoritesLoadingStatus = DataLoadingStates.IDLE
+      }),
+      builder.addCase(fetchMeaningsAction.rejected, (state) => {
+        state.meaningsFavoritesLoadingStatus = DataLoadingStates.ERROR
+      })
   }
 })
 
-export { groupSelector }
+export { groupSelector, meaningSelector }
 
 export const {
   reducer: wordsReducer,
   actions: {
     resetWords,
-    changeMeaningsPosition
+    changeMeaningsPosition,
+    changeFavoritesPosition,
+    addFavorite,
+    syncFavorites,
+    deleteFavorite
   }
 } = slice;
