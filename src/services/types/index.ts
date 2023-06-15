@@ -4,4 +4,8 @@ type SearchRequest = {
   pageSize?: number
 }
 
-export type { SearchRequest }
+type MeaningsRequest = {
+  ids: string[]
+}
+
+export type { SearchRequest, MeaningsRequest }

@@ -1,7 +1,14 @@
 import React from 'react'
+import { useRenderContent } from './hooks/useRenderContent'
 
 const FavoritesPage = () => {
-  return <div className={'text-3xl font-bold underline'}>FavoritesPage</div>
+  const renderContent = useRenderContent()
+
+  return (
+    <div>
+      {renderContent}
+    </div>
+  )
 }
 
 export default FavoritesPage

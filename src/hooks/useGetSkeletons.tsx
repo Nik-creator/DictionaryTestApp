@@ -9,8 +9,8 @@ const useGetSkeletons = ({ skeletonComponent: SkeletonComponent, length = 1 }: O
   const getSkeletons = () =>
     new Array(length)
       .fill(0)
-      .map(() => (
-        <SkeletonComponent />
+      .map((item, index) => (
+        <SkeletonComponent key={`${item }_${index}`} />
       ))
 
    return getSkeletons
