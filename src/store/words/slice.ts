@@ -1,9 +1,17 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { RootState, SlicesName } from "../types";
 import { fetchMeaningsAction, fetchWordsAction } from "./actions";
-import type { GroupResponse, Meanings, PayloadChangeFavoritesPosition, PayloadChangeMeaningsPosition, PayloadFavorite, PayloadSyncFavorite, WordsState } from "./types";
+import type {
+  GroupResponse,
+  Meanings,
+  PayloadChangeFavoritesPosition,
+  PayloadChangeMeaningsPosition,
+  PayloadFavorite,
+  WordsState
+} from "./types";
 import { DataLoadingStates } from "@/types";
 import { changePosition } from "../utils/changePosition";
+import { localStorageService } from "@/services/LocalStorage";
 
 const groupAdapter = createEntityAdapter<GroupResponse>()
 const meaningsAdapter = createEntityAdapter<Meanings>()
@@ -29,8 +37,9 @@ const slice = createSlice({
   name: SlicesName.WORDS,
   initialState,
   reducers: {
-    syncFavorites(state, { payload: ids }: PayloadSyncFavorite) {
-      state.favorites = ids
+    syncFavorites(state) {
+      const favoritesIds = localStorageService.getFavoritesIds()
+      state.favorites = favoritesIds
     },
     addFavorite(state, { payload: id }: PayloadFavorite) {
       state.favorites.push(id);
@@ -45,7 +54,7 @@ const slice = createSlice({
     },
     deleteFavorite(state, { payload: id }: PayloadFavorite) {
       const newFavoritesIds = state.favorites.filter(
-        (favoriteId) => favoriteId !== id,
+        (favoriteId) => Number(favoriteId) !== Number(id),
       );
       state.favorites = newFavoritesIds;
 

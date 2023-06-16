@@ -4,9 +4,9 @@ import type { MutableRefObject } from "react";
 type Timeout = ReturnType<typeof setTimeout>;
 
 export type UseDebounceProps<T> = {
-  onChange(value: T): void,
-  onApply(value: T): void,
-  delay: number,
+  onChange(value: T): void
+  onApply(value: T): void
+  delay: number
 }
 
 const useDebounce = <V,>({ onChange, onApply, delay }: UseDebounceProps<V>) => {

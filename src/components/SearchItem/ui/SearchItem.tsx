@@ -1,9 +1,18 @@
 import { useGetMeaningById } from '@/store/words/selectors'
 import { Card } from '@/ui/Card/ui/Card'
 import React, { useMemo } from 'react'
-import { useDnD } from '../hooks/useDnD'
-import { StarIcon } from './StarIcon'
 import styles from './Search.module.scss'
+import { StarIcon  } from '@/components/StarIcon'
+import { useDnD } from '@/hooks/useDnD'
+import { useAppDispatch } from '@/store/hooks/useAppDispatch'
+import { changeMeaningsPosition } from '@/store/words/slice'
+import { useSearchItemDnD } from '../hooks/useSearchItemDnD'
+
+type ChangePosition = {
+  dragIndex: number
+  hoverIndex: number
+  id?: number
+}
 
 type OwnProps = {
   id: string
@@ -15,25 +24,21 @@ const SearchItem = ({ id, index, groupId }: OwnProps) => {
   const { translation } = useGetMeaningById(id)
 
   const {
-    isDragging,
+    handlerId,
     ref,
-    handlerId
-  } = useDnD({
+    styles: {
+      opacity
+    }
+  } = useSearchItemDnD({
     groupId,
     id,
     index
   })
 
-  const opacity = useMemo(() => isDragging ? 0 : 1  , [isDragging])
-
   return (
     <Card classNames={styles.container} style={{ opacity }} ref={ref} data-handler-id={handlerId}>
       {translation?.text}
-      <div style={{
-        cursor: 'pointer'
-      }}>
         <StarIcon id={id} />
-      </div>
     </Card>
   )
 }

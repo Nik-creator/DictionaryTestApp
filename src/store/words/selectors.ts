@@ -17,6 +17,9 @@ const useGroupEntityById = (id: EntityId) =>
 const useGetMeaningById = (groupId: string) =>
   useAppSelector((state) => state.words.meaningsDict[groupId] || {})
 
+const isFavoriteMeaningById = (id: string) =>
+  useAppSelector((state) => state.words.favorites.some((stateId) => Number(stateId) === Number(id)))
+
 const useWordsStatus = () =>
   useAppSelector((state) => state.words.groupLoadingStatus)
 
@@ -38,6 +41,7 @@ export {
   useGetMeaningById,
   useFavoritesIds,
   useMeaningsIds,
+  isFavoriteMeaningById,
   useWordsStatus,
   useMeaningById,
   useMeaningsStatus

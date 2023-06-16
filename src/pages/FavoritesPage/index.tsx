@@ -6,7 +6,7 @@ const FavoritesPage = () => {
 
   return (
     <div>
-      {renderContent}
+      {renderContent()}
     </div>
   )
 }

@@ -2,9 +2,9 @@ import { SearchGroup, SearchGroupSkeleton } from '@/components/SearchGroup'
 import { useGetSkeletons } from '@/hooks/useGetSkeletons'
 import { useGroupIds, useWordsStatus } from '@/store/words/selectors'
 import React, { useMemo } from 'react'
-import { NotFoundGroup } from '../components/NotFoundGroup'
 import { DataLoadingStates } from '@/types'
 import { useGetDefaultWords } from './useGetDefaultWords'
+import { NotFoundText } from '@/components/NotFoundText/ui/NotFoundText'
 
 const DEFAULT_SKELETON_COUNT = 5
 
@@ -27,7 +27,7 @@ const useRenderContent = () => {
       ? groupIds.map((id) => (
         <SearchGroup key={id} id={id} />
       ))
-      : <NotFoundGroup />
+      : <NotFoundText text='Слова не найдены' />
   }, [groupLength])
 
   const renderContent = useMemo(() => {
