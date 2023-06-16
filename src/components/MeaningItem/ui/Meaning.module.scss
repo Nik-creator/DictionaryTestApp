@@ -1,0 +1,13 @@
+.skeleton {
+  margin-bottom: 20px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  @apply bg-input;
+  margin-bottom: 20px;
+  cursor: grab;
+  padding: 10px 15px;
+  border-radius: 10px;
+}

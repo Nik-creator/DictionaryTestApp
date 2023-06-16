@@ -1,5 +1,6 @@
 enum ItemTypes {
-  CARD = 'card'
+  CARD = 'card',
+  FAVORITE_ITEM = 'FAVORITE_ITEM'
 }
 
 export { ItemTypes }

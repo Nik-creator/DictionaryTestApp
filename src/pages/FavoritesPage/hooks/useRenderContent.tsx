@@ -1,12 +1,19 @@
+import { MeaningItem } from '@/components/MeaningItem'
+import { NotFoundText } from '@/components/NotFoundText/ui/NotFoundText'
 import { useAppDispatch } from '@/store/hooks/useAppDispatch'
 import { fetchMeaningsAction } from '@/store/words/actions'
-import { useMeaningsIds, useMeaningsStatus } from '@/store/words/selectors'
+import { useFavoritesIds, useMeaningsIds, useMeaningsStatus } from '@/store/words/selectors'
 import { DataLoadingStates } from '@/types'
-import React, { useEffect, useMemo } from 'react'
+import { useGetSkeletons } from '@/hooks/useGetSkeletons'
+import React, { useEffect } from 'react'
+import { MeaningItemSkeleton } from '@/components/MeaningItem'
+
+const DEFAULT_SKELETON_COUNT = 10
 
 const useRenderContent = () => {
   const dispatch = useAppDispatch()
 
+  const favoritesIds = useFavoritesIds()
   const ids = useMeaningsIds()
   const loadingStatus = useMeaningsStatus()
 
@@ -14,22 +21,27 @@ const useRenderContent = () => {
 
   useEffect(() => {
     dispatch(fetchMeaningsAction())
-  }, [])
+  }, [favoritesIds.length])
 
-  const renderItem = useMemo(() => {
+  const renderSkeleton = useGetSkeletons({
+    skeletonComponent: MeaningItemSkeleton,
+    length: DEFAULT_SKELETON_COUNT
+  })
+
+  const renderItem = () => {
     return idsLength
-      ? ids.map((id) => (
-        <div key={id}>{id}</div>
+      ? ids.map((id, index) => (
+        <MeaningItem key={id} id={id as string} index={index} />
       ))
-      : <div>не найдено</div>
-  }, [idsLength])
+      : <NotFoundText text='Список избранного пуст' />
+  }
 
-  const renderContent = useMemo(() => {
+  const renderContent = () => {
     if (loadingStatus === DataLoadingStates.LOADING) {
-      return <div>ЗАГРУЗКА</div>
+      return renderSkeleton()
     }
-    return renderItem
-  }, [idsLength, loadingStatus])
+    return renderItem()
+  }
 
   return renderContent
 }

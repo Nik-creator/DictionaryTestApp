@@ -7,9 +7,7 @@ const useInitFavorites = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const favoritesIds = localStorageService.getFavoritesIds()
-
-    dispatch(syncFavorites(favoritesIds))
+    dispatch(syncFavorites())
   }, [])
 }
 

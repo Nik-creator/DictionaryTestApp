@@ -2,13 +2,19 @@ import React, { useRef } from 'react'
 import { DragSourceMonitor, useDrag, useDrop } from 'react-dnd'
 import type { Identifier, XYCoord } from 'dnd-core'
 import { ItemTypes } from '@/enums/itemTypes'
-import { useAppDispatch } from '@/store/hooks/useAppDispatch'
-import { changeMeaningsPosition } from '@/store/words/slice'
 
 type OwnProps = {
   index: number
   id: string
-  groupId: number
+  groupId?: number
+  type: ItemTypes
+  changePosition: (params: ChangePosition) => void
+}
+
+type ChangePosition = {
+  dragIndex: number
+  hoverIndex: number
+  id?: number
 }
 
 interface DragItem {
@@ -17,9 +23,7 @@ interface DragItem {
   type: string
 }
 
-const useDnD = ({ index, groupId, id }: OwnProps) => {
-  const dispatch = useAppDispatch()
-
+const useDnD = ({ index, id, groupId, type, changePosition }: OwnProps) => {
   const ref = useRef<HTMLDivElement>(null)
 
   const [{ handlerId }, drop] = useDrop<
@@ -27,7 +31,7 @@ const useDnD = ({ index, groupId, id }: OwnProps) => {
     void,
     { handlerId: Identifier | null }
   >({
-    accept: ItemTypes.CARD,
+    accept: type,
     collect(monitor) {
       return {
         handlerId: monitor.getHandlerId(),
@@ -63,18 +67,18 @@ const useDnD = ({ index, groupId, id }: OwnProps) => {
         return
       }
 
-      dispatch(changeMeaningsPosition({
+      changePosition({
         dragIndex,
         hoverIndex,
-        groupId
-      }))
+        id: groupId
+      })
 
       item.index = hoverIndex
     },
   })
 
   const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.CARD,
+    type,
     item: () => {
       return { id, index }
     },
