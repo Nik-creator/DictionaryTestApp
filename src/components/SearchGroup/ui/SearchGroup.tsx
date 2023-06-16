@@ -18,7 +18,10 @@ const SearchGroup = ({ id: groupId }: OnwProps) => {
 
   return (
     <div className={styles.container}>
-      <Typography variant='subtitle'>{text}</Typography>
+      <div className={styles.titleContainer}>
+        <Typography>Перевод: &nbsp;</Typography>
+        <Typography className={styles.text}>{text}</Typography>
+      </div>
       {meaningsIds.map((id, index) => (
         <SearchItem key={id} id={id} index={index} groupId={Number(groupId)} />
       ))}

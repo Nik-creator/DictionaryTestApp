@@ -12,3 +12,13 @@
 .skeletonContainer {
   margin-bottom: 20px;
 }
+
+.titleContainer {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.text {
+  @apply underline text-accent-red
+}
