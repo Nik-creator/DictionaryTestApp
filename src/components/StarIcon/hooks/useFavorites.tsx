@@ -6,7 +6,6 @@ import React, { useCallback } from 'react'
 const useFavorites = (id: string) => {
   const isFavorite = isFavoriteMeaningById(id)
 
-  console.log('v', isFavorite)
   const dispatch = useAppDispatch()
 
   const handleClick = useCallback(() => {

@@ -1,3 +1,5 @@
+import { PartOfSpeechCode } from "@/store/words/types"
+
 type QueryStringDict = { [key: string]: unknown }
 
 enum DataLoadingStates {
@@ -6,5 +8,7 @@ enum DataLoadingStates {
   ERROR = 'ERROR'
 }
 
-export type { QueryStringDict }
+type PartsOfSpeech = { [K in PartOfSpeechCode]: string }
+
+export type { QueryStringDict, PartsOfSpeech }
 export { DataLoadingStates }

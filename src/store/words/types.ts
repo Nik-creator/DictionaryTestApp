@@ -139,6 +139,7 @@ export type {
   MeaningsActionResponse,
   MeaningsActionRequest,
   Meanings,
+  PartOfSpeechCode,
   ChangePositionProps,
   PayloadChangeMeaningsPosition,
   PayloadChangeFavoritesPosition,
