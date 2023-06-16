@@ -2,19 +2,16 @@ import { AppLink } from '@/ui/AppLink'
 import { Typography } from '@/ui/Typography'
 import React from 'react'
 import styles from './TopBar.module.scss'
-import { useGetTitle } from '../hooks/useGetTitle'
+import { useGetLink } from '../hooks/useGetLink'
 
 
 const TopBar = () => {
-  const {
-    title,
-    routePath
-  } = useGetTitle()
+  const Link = useGetLink()
 
   return (
     <div className={styles.container}>
       <div />
-      <AppLink to={routePath} className={styles.link}>{title}</AppLink>
+      <Link />
     </div>
   )
 }
