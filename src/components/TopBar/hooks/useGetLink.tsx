@@ -1,17 +1,14 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
-import { favoritesPath } from '../constants/routePath';
 import { FavoriteNavigationButton } from '../ui/FavoriteNavigationLink';
 import { MainNavigationLink } from '../ui/MainNavigationLink';
+import { useIsFavoriteScreen } from '@/hooks/useIsFavoriteScreen';
 
 const useGetLink = () => {
-  const { pathname } = useLocation()
+  const isFavoriteScreen = useIsFavoriteScreen()
 
-  if (favoritesPath.includes(pathname)) {
-   return MainNavigationLink
-  }
-
-  return FavoriteNavigationButton
+  return isFavoriteScreen
+    ? MainNavigationLink
+    : FavoriteNavigationButton
 }
 
 export { useGetLink }

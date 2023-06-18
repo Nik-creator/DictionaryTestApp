@@ -9,6 +9,11 @@ type MeaningState = {
   }
 }
 
+type FiltersState = {
+  partOfSpeechValues: { [K in PartOfSpeechCode]?: boolean }
+  searchString: string
+}
+
 type WordsState = {
   group: EntityState<GroupResponse>,
   meaningsDict: MeaningState
@@ -16,6 +21,7 @@ type WordsState = {
   meaningsFavoritesLoadingStatus: DataLoadingStates
   favorites: string[]
   meanings: EntityState<Meanings>
+  filters: FiltersState
 };
 
 type ChangePositionProps = {
@@ -30,6 +36,13 @@ type PayloadChangeMeaningsPosition = PayloadAction<{
 type PayloadChangeFavoritesPosition = PayloadAction<ChangePositionProps>
 
 type PayloadFavorite = PayloadAction<string>
+
+type PayloadPartOfSpeechFilter = PayloadAction<{
+  speechCode: PartOfSpeechCode,
+  value: boolean
+}>
+
+type PayloadSearchString = PayloadAction<string>
 
 type PayloadSyncFavorite = PayloadAction<string[]>
 
@@ -144,6 +157,8 @@ export type {
   PayloadChangeMeaningsPosition,
   PayloadChangeFavoritesPosition,
   PayloadFavorite,
+  PayloadPartOfSpeechFilter,
+  PayloadSearchString,
   PayloadSyncFavorite,
   GroupResponse,
   Word
