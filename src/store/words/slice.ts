@@ -7,6 +7,8 @@ import type {
   PayloadChangeFavoritesPosition,
   PayloadChangeMeaningsPosition,
   PayloadFavorite,
+  PayloadPartOfSpeechFilter,
+  PayloadSearchString,
   WordsState
 } from "./types";
 import { DataLoadingStates } from "@/types";
@@ -30,7 +32,11 @@ const initialState: WordsState = {
   groupLoadingStatus: DataLoadingStates.IDLE,
   meaningsFavoritesLoadingStatus: DataLoadingStates.IDLE,
   meaningsDict: {},
-  favorites: []
+  favorites: [],
+  filters: {
+    partOfSpeechValues: {},
+    searchString: ''
+  }
 }
 
 const slice = createSlice({
@@ -40,6 +46,20 @@ const slice = createSlice({
     syncFavorites(state) {
       const favoritesIds = localStorageService.getFavoritesIds()
       state.favorites = favoritesIds
+    },
+    filterPartOfSpeechValues(state, { payload }: PayloadPartOfSpeechFilter) {
+      const { speechCode, value } = payload
+
+      state.filters.partOfSpeechValues = {
+        ...state.filters.partOfSpeechValues,
+        [speechCode]: value
+      }
+    },
+    searchFromFavorites(state, { payload }: PayloadSearchString) {
+      state.filters.searchString = payload
+    },
+    resetFilters(state) {
+      state.filters = initialState.filters
     },
     addFavorite(state, { payload: id }: PayloadFavorite) {
       state.favorites.push(id);
@@ -152,6 +172,9 @@ export const {
     changeFavoritesPosition,
     addFavorite,
     syncFavorites,
-    deleteFavorite
+    deleteFavorite,
+    resetFilters,
+    searchFromFavorites,
+    filterPartOfSpeechValues
   }
 } = slice;

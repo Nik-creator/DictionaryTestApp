@@ -3,9 +3,13 @@ import { useAppDispatch } from '@/store/hooks/useAppDispatch'
 import { fetchWordsAction } from '@/store/words/actions'
 import React, { useCallback, useState } from 'react'
 import { REQUEST_DELAY } from '../constants'
-import { resetWords } from '@/store/words/slice'
+import { resetWords, searchFromFavorites } from '@/store/words/slice'
+import { useIsFavoriteScreen } from '@/hooks/useIsFavoriteScreen'
+
 
 const useSearchInput = () => {
+  const isFavoriteScreen = useIsFavoriteScreen()
+
   const dispatch = useAppDispatch()
   const [inputValue, setInputValue] = useState('')
 
@@ -20,9 +24,13 @@ const useSearchInput = () => {
     }))
   }, [])
 
+  const searchWordInState = useCallback((value: string) => {
+    dispatch(searchFromFavorites(value))
+  }, [])
+
   const changeDebounceValue = useDebounce({
     delay: REQUEST_DELAY,
-    onApply: getWords,
+    onApply: isFavoriteScreen ? searchWordInState : getWords,
     onChange: changeInputValue
   })
 

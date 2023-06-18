@@ -1,0 +1,15 @@
+.filterTitle {
+  @apply text-white;
+  margin-bottom: 20px;
+}
+
+.filterItemContainer {
+  display: flex;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.filterItem {
+  @apply text-white;
+  margin-left: 10px;
+}

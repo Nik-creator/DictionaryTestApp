@@ -1,0 +1,1 @@
+export { PartSpeechFilter } from './ui/PartSpeechFilter'
